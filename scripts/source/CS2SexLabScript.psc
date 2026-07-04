@@ -62,7 +62,7 @@ Event OrgasmSL(Form actorForm, Int enjoyment, Int orgasmCount)
 
 	
 	;If doesOrgasm
-		If ShouldEjaculate(slScene, orgasmee)
+		If !PenisIsInside(slScene, orgasmee)
 			Form cumObject = StorageUtil.PluckFormValue(orgasmee, "CS2_ejaculating")
 			If cumObject
 				; don't fully remove, it will cause NPCs to redress on second ejaculation during a scene
@@ -258,20 +258,11 @@ EndFunction/;
 
 
 
-; Decide whether to show the external cumshot for this orgasm.
-; When the penis is inside a partner the effect clips through the body, so only the contained
-; animated mesh (ejaculationMode 1) may show there - and only if the MCM "Ejaculate while
-; penetrating" toggle allows it. The "shooting" modes (particles, drops, projectiles) always
-; stay hidden while inside, since they spray outward through the body.
-Bool Function ShouldEjaculate(SexLabThread slScene, Actor a)
-	If !PenisIsInside(slScene, a)
-		return true  ; external finish (handjob / footjob / titfuck / pull-out) - always show
-	EndIf
-	return Config.ejaculationMode == 1 && Config.ejacWhileInside
-EndFunction
-
 ; Returns true when the orgasming actor's penis is currently inside a partner (mouth/deepthroat,
-; vagina, or anus) via SexLab P+'s framework-native per-actor interaction detection.
+; vagina, or anus), via SexLab P+'s framework-native per-actor interaction detection. OrgasmSL
+; ejaculates only when this is false, so the external cumshot never clips through the head in oral
+; or sprays from inside the body in vaginal/anal (no ejaculation mode collides with the partner's
+; body, so any internal show would clip straight through).
 Bool Function PenisIsInside(SexLabThread slScene, Actor a)
 	return slScene.IsOralComplex(a) || slScene.IsVaginalComplex(a) || slScene.IsAnalComplex(a)
 EndFunction

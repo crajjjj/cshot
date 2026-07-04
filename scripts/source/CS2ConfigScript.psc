@@ -29,7 +29,6 @@ Float Property spurtRatio Auto
 Float Property cumAlpha Auto
 Bool Property allowUnrealistic Auto
 Bool Property draining Auto
-Bool Property ejacWhileInside Auto  ; show the animated mesh even while the penis is inside (mode 1 only)
 
 ; Settings - Genitals
 Bool genShowingNPC
@@ -107,7 +106,6 @@ Int indRatioOID
 Int indAlphaOID
 Int unrealisticOID
 Int drainingOID
-Int ejacWhileInsideOID
 Int bodyOID
 Int[] animOID
 Int explainOID  ; no longer in use
@@ -137,8 +135,8 @@ String crosshairName
 Int installedVersion
 String versionString
 Int Function GetVersion()
-	versionString = "2.3.1"
-	Return 231
+	versionString = "2.3"
+	Return 230
 EndFunction
 
 
@@ -188,7 +186,7 @@ Function Initialize()
 		Pages = new String[1]
 		Pages[0] = "ERROR"
 	ElseIf SexLabInstalled
-		Pages = new String[4]
+		Pages = new String[3]  ; the "Animations (SexLab)" page is disabled, so only 3 pages (was [4] -> blank 4th tab)
 		Pages[0] = "General"
 		Pages[1] = "Visuals"
 		Pages[2] = "Genital data"
@@ -225,9 +223,6 @@ Function Initialize()
 			genAppliesToNames[1] = "This character's race"
 			genMalesAlways = True
 			Main.debugMsgLevel = debugMsgLevel
-		EndIf
-		If GetVersion() >= 231 && installedVersion < 231
-			ejacWhileInside = True  ; default: animated mesh shows while inside
 		EndIf
 		;
 		; add update maintenance code for future versions here
@@ -438,7 +433,6 @@ Event OnPageReset(String page)
 		Else
 			drainingOID = AddToggleOption("Draining and recovery", draining)
 		EndIf
-		ejacWhileInsideOID = AddToggleOption("Ejaculate while penetrating", ejacWhileInside)
 
 		SetCursorPosition(1)
 		If maleBodyClass == 0
@@ -664,9 +658,6 @@ Event OnOptionSelect(Int option)
 		ElseIf option == drainingOID
 			draining = !draining
 			SetToggleOptionValue(drainingOID, draining)
-		ElseIf option == ejacWhileInsideOID
-			ejacWhileInside = !ejacWhileInside
-			SetToggleOptionValue(ejacWhileInsideOID, ejacWhileInside)
 		; next four cases: clicked on an individual setting that shows "(use global)"
 		ElseIf option == indAmountOID
 			StorageUtil.SetFloatValue(crosshairRef, "CS2CumAmount", cumAmount)
@@ -1239,9 +1230,6 @@ Event OnOptionDefault(Int option)
 		ElseIf option == drainingOID
 			draining = False
 			SetToggleOptionValue(drainingOID, draining)
-		ElseIf option == ejacWhileInsideOID
-			ejacWhileInside = True
-			SetToggleOptionValue(ejacWhileInsideOID, ejacWhileInside)
 		EndIf
 
 	ElseIf CurrentPage == "Genital data"
@@ -1368,8 +1356,6 @@ Event OnOptionHighlight(Int option)
 			SetInfoText("Allows you to set the sliders to values that are pretty much over the top.\nWARNING: In drop objects mode, spawning a huge number of drops within a short time can cause spikes of high script usage, and maybe even stack dumps if Papyrus is already stressed by other mods.")
 		ElseIf option == drainingOID
 			SetInfoText("With this option enabled, guys won't have much cum left if they've just emptied their balls a short while ago. Cum amount recovers over time, up to 2.5 times the normal amount after not having had an orgasm for months.")
-		ElseIf option == ejacWhileInsideOID
-			SetInfoText("Show the animated cumshot mesh even while the penis is inside a partner (mouth / vagina / anus). Only affects Animated Mesh mode - the particle, drop, and projectile modes always stay hidden while inside, because they would shoot through the body.")
 		ElseIf option == bodyOID
 			SetInfoText("Select the body / schlong to adjust the cumshots for.")
 		ElseIf option == indAmountOID
