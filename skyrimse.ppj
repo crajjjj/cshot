@@ -1,0 +1,91 @@
+<?xml version='1.0'?>
+<PapyrusProject xmlns="PapyrusProject.xsd"
+    Flags="TESV_Papyrus_Flags.flg"
+    Game="sse"
+    Output="Scripts"
+    Optimize="false"
+    Release="false"
+    Zip="true"
+    Package="false"
+    Final="false">
+    <Variables>
+        <!-- Set the name of your mod: -->
+        <Variable Name="ModName" Value="Hentairim Cumshot patch" />
+        <!-- The folder where you store all of your mods -->
+        <Variable Name="ModsFolder" Value="C:\Playground\Skyrim\mods" />
+        <!-- Optional folder with additional source code for imports -->
+        <Variable Name="ImportsFolder" Value=".\Source" />
+    </Variables>
+    <!-- Imports kept as-is from the Hentairim p+ 3.0.4 project: the CS2* scripts only touch a few
+         of these directly, but compiling them drags in SexLab's transitive dependencies (e.g.
+         sslExpressionUtil -> MfgConsoleFuncExt), so the full external set must stay resolvable. -->
+    <Imports>
+        <Import>.\Scripts\Source</Import>
+        <Import>C:\Playground\stubs</Import>
+        <Import>C:\Playground\Skyrim\mods\build\FNIS Behavior SE 7.6\Data\source\scripts</Import>
+        <Import>C:\Playground\Skyrim\mods\build\SkyrimLovense-0.1.0\Source\Scripts</Import>
+        <Import>C:\Playground\Skyrim\mods\build\UIExtensions\scripts\source</Import>
+        <Import>C:\Playground\Skyrim\mods\build\AnimSpeedSE\scripts\source</Import>
+        <Import>C:\Playground\Skyrim\mods\SKSE\SexlabArousedNG\dist\Core\Source\Scripts</Import>
+        <Import>C:\Playground\Skyrim\mods\build\FNIS Sexy Move SE 7.2\Data\Source\Scripts</Import>
+        <!--<Import>C:\Playground\Skyrim\mods\build\MfgConsole-44596-1-1\data\scripts\source</Import>-->
+        <Import>C:\Playground\Skyrim\mods\build\Stress And Trauma SE v1.0\scripts\source</Import>
+        <!-- <Import>C:\Playground\Skyrim\mods\build\SexLab Separate Orgasm\Scripts\Source</Import> -->
+        <!-- <Import>C:\Playground\Skyrim\mods\build\SLAXSE2022\scripts\Source</Import> -->
+        <!-- <Import>C:\Playground\Skyrim\mods\build\Sexlab</Import> -->
+        <Import>C:\Playground\Skyrim\mods\build\SexLab Framework PPLUS - V2.17.1\Source\Scripts</Import>
+        <Import>C:\Playground\Skyrim\mods\build\B612\Source\Scripts</Import>
+        <Import>C:\Playground\Skyrim\mods\build\Creature Framework\scripts\source</Import>
+        <Import>C:\Playground\Skyrim\mods\build\Apropos2\Scripts\Source</Import>
+        <Import>C:\Playground\Skyrim\mods\build\SlaveTats-1.3.0-beta-2 SE\Source\Scripts</Import>
+        <Import>C:\Playground\Skyrim\mods\build\Devious Devices SE 5.1\00 Core\scripts\Source</Import>
+        <Import>C:\Playground\Skyrim\mods\build\ConsoleUtil</Import>
+        <Import>C:\Playground\Skyrim\mods\build\XP32 Maximum Skeleton Special Extended 4.67\Character Creation\MCM\assets\scripts\source</Import>
+        <Import>C:\Playground\Skyrim\mods\build\ZaZ Animation Pack</Import>
+        <Import>C:\Playground\Skyrim\mods\build\iwantWidgets\Source\Scripts</Import>
+        <Import>C:\Playground\Skyrim\mods\build\iwantstatusbars\Source\Scripts</Import>
+        <Import>C:\Playground\Skyrim\mods\build\SkyUI_5.1_SDK\Scripts\Source</Import>
+         <Import>C:\Playground\Skyrim\mods\build\skyui-master\dist\Data\Scripts\Source</Import>
+        <Import>C:\Playground\Skyrim\mods\build\powerofthree\Required\Source\scripts</Import>
+        <Import>C:\Playground\Skyrim\mods\build\Papyrus Extender\source\scripts</Import>
+        <Import>C:\Playground\Skyrim\mods\build\JContainers SE\Data\scripts\source</Import>
+        <Import>C:\Playground\Skyrim\mods\build\racemenu\scripts\source</Import>
+        <Import>C:\Playground\Skyrim\mods\SKSE\Mfg-Fix-NG\dist\source\scripts</Import>
+        <Import>C:\Playground\Skyrim\mods\build\The New Gentleman\Core\scripts\source</Import>
+        <Import>C:\Playground\Skyrim\mods\build\MCM SDK-53000-1-3-0-1629918647\Source\Scripts</Import>
+        <Import>C:\Playground\Skyrim\mods\build\Mu Facial Expression Extended - MFEE\scripts\source</Import>
+        <Import>C:\Playground\Skyrim\mods\build\Oninus Lactis NG\Scripts\Source</Import>
+        <Import>C:\Playground\Skyrim\mods\build\Milk Mod Economy\Scripts\Source</Import>
+        <Import>C:\Playground\Skyrim\mods\build\Schlongs of Skyrim SE\scripts\source</Import>
+        <Import>C:\SteamLibrary\steamapps\common\Skyrim Special Edition\Data\Source\Scripts</Import>
+        <!--<Import>C:\Playground\Skyrim\mods\build\Hentairim tags\Source\Scripts</Import>-->
+    </Imports>
+    <Folders>
+        <!-- Relative path to folder containing .psc Papyrus source code files for this project -->
+        <Folder>.\Scripts\Source</Folder>
+    </Folders>
+    <!-- The following section is for .bsa archives. You can enable it by setting Package="true" in the PapyrusProject -->
+    <Packages Output=".">
+        <Package Name="@ModName" RootDir=".">
+            <Match In="Scripts">*.pex</Match>
+            <!-- <Match In="interface\translations">*.txt</Match> -->
+        </Package>
+        <!-- If you have any texture files, uncomment the following to create a Textures .bsa archive with texture files -->
+        <!-- <Package Name="@ModName - Textures" RootDir=".">
+            <Include>*.dds</Include>
+        </Package> -->
+    </Packages>
+    <!-- The following section is for .zip archive. You can enable it by setting Zip="true" in the PapyrusProject -->
+    <ZipFiles Output="Build">
+        <ZipFile Name="@ModName" RootDir="." Compression="deflate">
+            <!-- Scripts — source and compiled, only files from this project -->
+            <Match In="Scripts\Source">*.psc</Match>
+            <Match In="Scripts">CS2ConfigScript.pex</Match>
+            <Match In="Scripts">CS2DropScript.pex</Match>
+            <Match In="Scripts">CS2GameScript.pex</Match>
+            <Match In="Scripts">CS2PlayerAliasScript.pex</Match>
+            <Match In="Scripts">CS2PlayerAliasSLScript.pex</Match>
+            <Match In="Scripts">CS2SexLabScript.pex</Match>
+        </ZipFile>
+    </ZipFiles>
+</PapyrusProject>

@@ -1,0 +1,13 @@
+# Pyro build output (zip archive staged from skyrimse.ppj's <ZipFiles>)
+/Build/
+
+# Compiled Papyrus bytecode — regenerated from Scripts/Source by the Pyro build.
+# Tracking source (.psc) only keeps diffs readable; delete this line to version the .pex too.
+Scripts/*.pex
+
+# OS / editor cruft
+Thumbs.db
+desktop.ini
+*.bak
+*.tmp
+*~
