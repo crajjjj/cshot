@@ -11,3 +11,9 @@ desktop.ini
 *.bak
 *.tmp
 *~
+
+# Mod Organizer 2 per-install metadata (holds local download paths)
+meta.ini
+
+# Editor settings (machine-specific)
+.vscode/
