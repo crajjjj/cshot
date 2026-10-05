@@ -263,6 +263,19 @@ EndFunction/;
 ; ejaculates only when this is false, so the external cumshot never clips through the head in oral
 ; or sprays from inside the body in vaginal/anal (no ejaculation mode collides with the partner's
 ; body, so any internal show would clip straight through).
+; SexLab P+ 2.19 dropped IsOralComplex / IsVaginalComplex / IsAnalComplex; this reads the same
+; flags those helpers tested, straight from the 2.19 interaction table. The indices come from the
+; thread's own properties, so a renumbered table in a later P+ needs no change here.
 Bool Function PenisIsInside(SexLabThread slScene, Actor a)
-	return slScene.IsOralComplex(a) || slScene.IsVaginalComplex(a) || slScene.IsAnalComplex(a)
+	Bool[] f = slScene.GetInteractionFlags(a)
+	If f.Length <= slScene.pAnal
+		return False  ; no interaction table for this actor, or a P+ older than 2.19
+	EndIf
+	If f[slScene.aOral] || f[slScene.pOral] || f[slScene.aLickingShaft] || f[slScene.pLickingShaft] || f[slScene.aDeepthroat] || f[slScene.pDeepthroat]
+		return True
+	EndIf
+	If f[slScene.aVaginal] || f[slScene.pVaginal] || f[slScene.aGrinding] || f[slScene.pGrinding]
+		return True
+	EndIf
+	return f[slScene.aAnal] || f[slScene.pAnal]
 EndFunction

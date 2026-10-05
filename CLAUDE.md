@@ -71,18 +71,23 @@ Per-actor overrides live as `StorageUtil` float values on the actor: `CS2CumAmou
 
 ## Ejaculation gating
 
-The only meaningful divergence from stock Cumshot is how `CS2SexLabScript.OrgasmSL` decides whether to show the cumshot. It uses SexLab P+'s **per-actor interaction detection** — which the framework itself documents as "Superior alternatives to tag-based detectors":
+The only meaningful divergence from stock Cumshot is how `CS2SexLabScript.OrgasmSL` decides whether to show the cumshot. It uses SexLab P+'s **per-actor interaction detection** (**P+ 2.19 or newer**, see below):
 
 ```papyrus
 Bool Function PenisIsInside(SexLabThread slScene, Actor a)
-    return slScene.IsOralComplex(a) || slScene.IsVaginalComplex(a) || slScene.IsAnalComplex(a)
+    Bool[] f = slScene.GetInteractionFlags(a)
+    If f.Length <= slScene.pAnal
+        return False
+    EndIf
+    ; oral: a/pOral, a/pLickingShaft, a/pDeepthroat   vaginal: a/pVaginal, a/pGrinding   anal: a/pAnal
+    return f[slScene.aOral] || f[slScene.pOral] || ...
 EndFunction
 ; OrgasmSL ejaculates only when !PenisIsInside(slScene, orgasmee)
 ```
 
-`IsOralComplex` / `IsVaginalComplex` / `IsAnalComplex` (on `SexLabThread`, really the `sslThreadModel` override) read the live per-actor interaction table. For a schlonged actor the passive interactions (`pOral`/`pDeepthroat`/`pVaginal`/`pAnal`) mean "his penis is currently inside a partner." When it is, the external cumshot is suppressed (it would otherwise clip through the head in oral, or spray from inside the body in vaginal/anal). Handjob / footjob / titfuck / pull-out / masturbation are **not** internal, so the cumshot shows.
+`GetInteractionFlags(a)` (on `SexLabThread`, really the `sslThreadModel` override) returns the live per-actor interaction table, indexed by the thread's own `aXxx` / `pXxx` properties. The function tests the same flags the old `IsOralComplex` / `IsVaginalComplex` / `IsAnalComplex` helpers tested: those helpers existed up to P+ 2.18 and were removed in 2.19 together with `GetCurrentInteractionFlags`, so this build needs **P+ 2.19+**. On an older P+ the call fails, the table is empty, and every orgasm shows the external cumshot. For a schlonged actor, `pOral` / `pLickingShaft` / `pDeepthroat` (his genital is in a partner's mouth) and `aVaginal` / `aAnal` (his penis penetrates) mean "his penis is currently inside a partner." When it is, the external cumshot is suppressed (it would otherwise clip through the head in oral, or spray from inside the body in vaginal/anal). Handjob / footjob / titfuck / pull-out / masturbation are **not** internal, so the cumshot shows.
 
-This is framework-native and present on virtually every animation (Vaginal/Anal/Oral are core SexLab metadata), so it does **not** depend on any animation carrying custom SLATE tags. Earlier versions used a `ShowEjac` helper that called `HentaiRimTags.PenisActionLabel`/`EndingLabel`; that was replaced by `PenisIsInside`, which is why this project no longer imports the `Hentairim p+ 3.0.4` source. For finer control (distinguish "his penis is inside" from "he is giving oral"), use `slScene.GetCurrentInteractionFlags(a)` / `GetCurrentInteractionStringA(a)` and test only the passive (`p*`) entries.
+This is framework-native and present on virtually every animation (Vaginal/Anal/Oral are core SexLab metadata), so it does **not** depend on any animation carrying custom SLATE tags. Earlier versions used a `ShowEjac` helper that called `HentaiRimTags.PenisActionLabel`/`EndingLabel`; that was replaced by `PenisIsInside`, which is why this project no longer imports the `Hentairim p+ 3.0.4` source. For finer control (distinguish "his penis is inside" from "he is giving oral"), test only the entries that apply to the penis owner (`pOral`, `pLickingShaft`, `pDeepthroat`, `aVaginal`, `aAnal`) instead of both sides.
 
 ## SexLab event handling (`CS2SexLabScript`)
 
@@ -123,7 +128,7 @@ Where the directly-referenced types resolve from:
 
 | Need | Import path |
 |---|---|
-| `SexLabFramework` / `SexLabThread` / `SexlabRegistry` / `sslBaseAnimation` | `build\SexLab Framework PPLUS - V2.17.1\Source\Scripts` |
+| `SexLabFramework` / `SexLabThread` / `SexlabRegistry` / `sslBaseAnimation` | `build\SexLab Framework PPLUS - V2.19.0\Source\Scripts` (a `git archive` of P+ master's `dist/Source/Scripts`, see its `SOURCE.txt`) |
 | `SOS_API` / `SOS_AddonQuest_Script` | `build\Schlongs of Skyrim SE\scripts\source` |
 | `NiOverride` | `build\racemenu\scripts\source` |
 | `SKI_ConfigBase` + SKI_* chain | `build\SkyUI_5.1_SDK\Scripts\Source` and `build\MCM SDK-…\Source\Scripts` |
